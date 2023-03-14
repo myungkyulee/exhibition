@@ -19,12 +19,17 @@ public class Work {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
+
+    @Column(nullable = false)
+    private String title;
     private String description;
-    private Image image;
+
+    @Embedded
+    @Column(nullable = false)
+    private ImageFile image;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
     @CreatedDate

@@ -11,10 +11,8 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor
 @Getter
 @Embeddable
-public class Image {
-
-    private String fileName;
-    private String fileOriName;
-
-    private String fileUrl;
+public class ImageFile {
+    private String imageFileName;
+    private String imageFileOriName;
+    private String imageFileUrl;
 }
