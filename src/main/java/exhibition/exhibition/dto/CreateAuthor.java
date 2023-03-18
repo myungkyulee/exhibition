@@ -1,9 +1,7 @@
 package exhibition.exhibition.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import exhibition.exhibition.domain.Author;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
@@ -24,11 +22,19 @@ public class CreateAuthor {
     }
 
 
-    @Getter
-    @Setter
+    @Data
+    @NoArgsConstructor
     @AllArgsConstructor
-    //@NoArgsConstructor
+    @Builder
     public static class Response{
+        private String name;
+        private String email;
 
+        public static CreateAuthor.Response from(Author author) {
+            return Response.builder()
+                    .name(author.getName())
+                    .email(author.getEmail())
+                    .build();
+        }
     }
 }

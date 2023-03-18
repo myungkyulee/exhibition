@@ -1,6 +1,7 @@
 package exhibition.exhibition.service;
 
 import exhibition.exhibition.domain.Author;
+import exhibition.exhibition.dto.CreateAuthor;
 import exhibition.exhibition.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,17 +13,18 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
 
     @Transactional
-    public Author join(String name, String email, String password) {
-        if (authorRepository.findByEmail(email).isPresent()) {
+    public CreateAuthor.Response join(CreateAuthor.Request request) {
+        if (authorRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("중복된 이메일 입니다.");
         }
 
+
         Author author = Author.builder()
-                .email(email)
-                .name(name)
-                .password(password)
+                .email(request.getEmail())
+                .name(request.getName())
+                .password(request.getPassword())
                 .build();
 
-        return authorRepository.save(author);
+        return CreateAuthor.Response.from(authorRepository.save(author));
     }
 }
