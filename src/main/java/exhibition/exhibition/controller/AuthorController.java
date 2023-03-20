@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthorController {
     private final AuthorService authorService;
 
-    @PostMapping
+ /*   @PostMapping
     public ResponseEntity<CreateAuthor.Response> createAuthor(CreateAuthor.Request request){
-        return ResponseEntity.ok(authorService.join(request));
-    }
+        return ResponseEntity.ok(authorService.signUp(request));
+    }*/
 
 }

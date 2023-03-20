@@ -2,6 +2,7 @@ package exhibition.exhibition.controller;
 
 import exhibition.exhibition.domain.ImageFile;
 import exhibition.exhibition.dto.CreateWork;
+import exhibition.exhibition.provider.JwtProvider;
 import exhibition.exhibition.repository.ImageFileStore;
 import exhibition.exhibition.service.WorkService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -22,6 +24,7 @@ public class WorkController {
 
     private final WorkService workService;
     private final ImageFileStore imageFileStore;
+    private final JwtProvider jwtProvider;
 
 
     @GetMapping("/works/create")
@@ -33,12 +36,14 @@ public class WorkController {
     public ResponseEntity<CreateWork.Response> createWork(
             @RequestParam String title,
             @RequestParam String description,
-            @RequestParam("image") MultipartFile imageFile) throws IOException {
+            @RequestParam("image") MultipartFile imageFile,
+            HttpServletRequest request) throws IOException {
         ImageFile image = imageFileStore.storeImageFile(imageFile);
 
-        Long authorId = 1L;
+        String token = jwtProvider.getToken(request);
+        String userEmail = jwtProvider.authenticate(token);
 
-        CreateWork.Response work = workService.save(authorId, title, description, image);
+        CreateWork.Response work = workService.createWork(userEmail, title, description, image);
 
         return ResponseEntity.ok(work);
     }

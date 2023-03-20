@@ -17,8 +17,8 @@ public class WorkService {
     private final WorkRepository workRepository;
 
     @Transactional
-    public CreateWork.Response save(Long authorId, String title, String description, ImageFile image) {
-        Author author = authorRepository.findById(authorId)
+    public CreateWork.Response createWork(String email, String title, String description, ImageFile image) {
+        Author author = authorRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("없는 작가입니다."));
 
         Work work = Work.builder()
@@ -27,7 +27,6 @@ public class WorkService {
                 .author(author)
                 .image(image)
                 .build();
-
 
         return CreateWork.Response.from(workRepository.save(work));
     }

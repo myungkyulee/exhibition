@@ -42,5 +42,4 @@ public class CreateWork {
                     .image(work.getImage()).build();
         }
     }
-
 }

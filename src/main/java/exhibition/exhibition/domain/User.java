@@ -15,10 +15,24 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Author {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false)
+    private String email;
+    @Column(nullable = false)
+    private String password;
+
+    @OneToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 }
