@@ -21,4 +21,14 @@ public class Author {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    private String name;
+    private String email;
+
+    @OneToOne
+    private User user;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 }

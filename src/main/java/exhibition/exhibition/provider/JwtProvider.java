@@ -22,8 +22,8 @@ public class JwtProvider {
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
-    public String generateToken(String email) {
-        Claims claims = Jwts.claims().setSubject(Aes128Util.encrypt(email));
+    public String generateToken(Long userId) {
+        Claims claims = Jwts.claims().setSubject(Aes128Util.encrypt(userId.toString()));
 
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + TOKEN_EXPIRED_TIME);
@@ -37,15 +37,15 @@ public class JwtProvider {
     }
 
     public String getToken(HttpServletRequest request) {
-        return request.getHeader("X-ACCESS-TOKEN");
+        return request.getHeader("Authorization");
     }
 
-    public String authenticate(String token){
+    public Long authenticate(String token){
         if (!validateToken(token)) {
             throw new RuntimeException("유효하지 않은 토큰입니다.");
         }
 
-        return getEmail(token);
+        return Long.parseLong(getEmail(token));
     }
 
     public String getEmail(String token) {
