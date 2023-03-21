@@ -26,7 +26,6 @@ public class WorkController {
     private final ImageFileStore imageFileStore;
     private final JwtProvider jwtProvider;
 
-
     @GetMapping("/works/create")
     public String createWorkForm() {
         return "index";
@@ -38,12 +37,12 @@ public class WorkController {
             @RequestParam String description,
             @RequestParam("image") MultipartFile imageFile,
             HttpServletRequest request) throws IOException {
-        ImageFile image = imageFileStore.storeImageFile(imageFile);
 
         String token = jwtProvider.getToken(request);
-        String userEmail = jwtProvider.authenticate(token);
+        Long userId = jwtProvider.authenticate(token);
 
-        CreateWork.Response work = workService.createWork(userEmail, title, description, image);
+        ImageFile image = imageFileStore.storeImageFile(imageFile);
+        CreateWork.Response work = workService.createWork(userId, title, description, image);
 
         return ResponseEntity.ok(work);
     }
