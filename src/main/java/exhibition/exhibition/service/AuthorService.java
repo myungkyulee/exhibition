@@ -28,6 +28,8 @@ public class AuthorService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
 
+        user.getRoles().add("AUTHOR");
+
         Author author = Author.builder()
                 .name(authorName)
                 .user(user)

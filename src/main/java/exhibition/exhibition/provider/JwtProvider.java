@@ -1,18 +1,23 @@
 package exhibition.exhibition.provider;
 
+import exhibition.exhibition.dto.Authentication;
 import exhibition.exhibition.util.Aes128Util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
@@ -22,8 +27,9 @@ public class JwtProvider {
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
-    public String generateToken(Long userId) {
+    public String generateToken(Long userId, List<String> role) {
         Claims claims = Jwts.claims().setSubject(Aes128Util.encrypt(userId.toString()));
+        claims.put("role", role);
 
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + TOKEN_EXPIRED_TIME);
@@ -40,16 +46,15 @@ public class JwtProvider {
         return request.getHeader("Authorization");
     }
 
-    public Long authenticate(String token){
+    public Authentication getAuthentication(String token) {
         if (!validateToken(token)) {
             throw new RuntimeException("유효하지 않은 토큰입니다.");
         }
+        Claims claims = parseClaims(token);
+        long userId = Long.parseLong(Objects.requireNonNull(Aes128Util.decrypt(claims.getSubject())));
+        List<String> roles = (List<String>) claims.get("role");
 
-        return Long.parseLong(getEmail(token));
-    }
-
-    public String getEmail(String token) {
-        return Aes128Util.decrypt(parseClaims(token).getSubject());
+        return new Authentication(userId, roles);
     }
 
     public boolean validateToken(String token) {

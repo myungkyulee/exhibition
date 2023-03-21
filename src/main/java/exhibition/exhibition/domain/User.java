@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,6 +31,9 @@ public class User {
     @OneToOne
     @JoinColumn(name = "author_id")
     private Author author;
+
+    @ElementCollection
+    private List<String> roles;
 
     @CreatedDate
     private LocalDateTime createdAt;

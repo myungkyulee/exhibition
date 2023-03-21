@@ -2,13 +2,15 @@ package exhibition.exhibition.service;
 
 import exhibition.exhibition.security.PasswordEncoder;
 import exhibition.exhibition.domain.User;
-import exhibition.exhibition.dto.Authentication;
+import exhibition.exhibition.dto.SignIn;
 import exhibition.exhibition.dto.CreateUser;
 import exhibition.exhibition.provider.JwtProvider;
 import exhibition.exhibition.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,13 +28,14 @@ public class UserService {
         User user = User.builder()
                 .email(request.getEmail())
                 .name(request.getName())
+                .roles(List.of("USER"))
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
         return CreateUser.Response.fromEntity(userRepository.save(user));
     }
 
-    public Authentication.Response signIn(Authentication.Request request) {
+    public SignIn.Response signIn(SignIn.Request request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 이메일 입니다."));
 
@@ -40,9 +43,9 @@ public class UserService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        String jwt = jwtProvider.generateToken(user.getId());
+        String jwt = jwtProvider.generateToken(user.getId(), user.getRoles());
 
-        return Authentication.Response.builder()
+        return SignIn.Response.builder()
                 .username(user.getName())
                 .jwt(jwt)
                 .build();
