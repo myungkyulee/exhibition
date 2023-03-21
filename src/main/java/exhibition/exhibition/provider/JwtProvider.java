@@ -1,5 +1,6 @@
 package exhibition.exhibition.provider;
 
+import exhibition.exhibition.util.Aes128Util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -22,7 +23,7 @@ public class JwtProvider {
     private String secretKey;
 
     public String generateToken(String email) {
-        Claims claims = Jwts.claims().setSubject(email);
+        Claims claims = Jwts.claims().setSubject(Aes128Util.encrypt(email));
 
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + TOKEN_EXPIRED_TIME);
@@ -48,7 +49,7 @@ public class JwtProvider {
     }
 
     public String getEmail(String token) {
-        return parseClaims(token).getSubject();
+        return Aes128Util.decrypt(parseClaims(token).getSubject());
     }
 
     public boolean validateToken(String token) {
