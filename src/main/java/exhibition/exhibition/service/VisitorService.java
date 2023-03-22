@@ -1,5 +1,7 @@
 package exhibition.exhibition.service;
 
+import exhibition.exhibition.exception.ErrorCode;
+import exhibition.exhibition.exception.ExhibitionException;
 import exhibition.exhibition.security.PasswordEncoder;
 import exhibition.exhibition.domain.Visitor;
 import exhibition.exhibition.dto.SignIn;
@@ -37,10 +39,10 @@ public class VisitorService {
 
     public SignIn.Response signIn(SignIn.Request request) {
         Visitor visitor = visitorRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 이메일 입니다."));
+                .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_VISITOR));
 
         if (!passwordEncoder.matches(request.getPassword(), visitor.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new ExhibitionException(ErrorCode.PASSWORD_UN_MATCH);
         }
 
         String jwt = jwtProvider.generateToken(visitor.getId(), visitor.getRoles());

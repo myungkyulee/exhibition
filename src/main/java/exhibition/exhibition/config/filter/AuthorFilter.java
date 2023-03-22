@@ -1,33 +1,47 @@
 package exhibition.exhibition.config.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import exhibition.exhibition.dto.Authentication;
+import exhibition.exhibition.exception.ErrorCode;
+import exhibition.exhibition.exception.ErrorResponse;
+import exhibition.exhibition.exception.ExhibitionException;
 import exhibition.exhibition.provider.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@Slf4j
 @WebFilter(urlPatterns = {"/authors/*"})
 @RequiredArgsConstructor
 public class AuthorFilter implements Filter {
 
     private static final String TOKEN_HEADER = "Authorization";
     private final JwtProvider jwtProvider;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
+        response.setContentType("application/json");
         String jwt = req.getHeader(TOKEN_HEADER);
 
-        Authentication auth = jwtProvider.getAuthentication(jwt);
+        try {
+            Authentication auth = jwtProvider.getAuthentication(jwt);
+            boolean authorized = auth.getRoles().stream()
+                    .anyMatch(a -> a.equals("AUTHOR"));
+            if (!authorized) {
+                throw new ExhibitionException(ErrorCode.ACCESS_DENIED);
+            }
 
-        auth.getRoles().stream()
-                .filter(a -> a.equals("AUTHOR"))
-                .findFirst()
-                .orElseThrow(() -> new ServletException("접근 권한이 없습니다."));
+            chain.doFilter(request, response);
+        } catch (ExhibitionException e) {
+            String body = objectMapper.writeValueAsString(new ErrorResponse(e.getErrorCode()));
 
-        chain.doFilter(request, response);
+            response.getWriter().write(body);
+        }
     }
 }

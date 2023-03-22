@@ -1,6 +1,8 @@
 package exhibition.exhibition.provider;
 
 import exhibition.exhibition.dto.Authentication;
+import exhibition.exhibition.exception.ErrorCode;
+import exhibition.exhibition.exception.ExhibitionException;
 import exhibition.exhibition.util.Aes128Util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -48,7 +50,7 @@ public class JwtProvider {
 
     public Authentication getAuthentication(String token) {
         if (!validateToken(token)) {
-            throw new RuntimeException("유효하지 않은 토큰입니다.");
+            throw new ExhibitionException(ErrorCode.INVALID_TOKEN);
         }
         Claims claims = parseClaims(token);
         long visitorId = Long.parseLong(Objects.requireNonNull(Aes128Util.decrypt(claims.getSubject())));
