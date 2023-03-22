@@ -27,8 +27,8 @@ public class JwtProvider {
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
-    public String generateToken(Long userId, List<String> role) {
-        Claims claims = Jwts.claims().setSubject(Aes128Util.encrypt(userId.toString()));
+    public String generateToken(Long visitorId, List<String> role) {
+        Claims claims = Jwts.claims().setSubject(Aes128Util.encrypt(visitorId.toString()));
         claims.put("role", role);
 
         Date now = new Date();
@@ -51,10 +51,10 @@ public class JwtProvider {
             throw new RuntimeException("유효하지 않은 토큰입니다.");
         }
         Claims claims = parseClaims(token);
-        long userId = Long.parseLong(Objects.requireNonNull(Aes128Util.decrypt(claims.getSubject())));
+        long visitorId = Long.parseLong(Objects.requireNonNull(Aes128Util.decrypt(claims.getSubject())));
         List<String> roles = (List<String>) claims.get("role");
 
-        return new Authentication(userId, roles);
+        return new Authentication(visitorId, roles);
     }
 
     public boolean validateToken(String token) {

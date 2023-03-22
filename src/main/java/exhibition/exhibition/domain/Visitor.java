@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class Visitor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

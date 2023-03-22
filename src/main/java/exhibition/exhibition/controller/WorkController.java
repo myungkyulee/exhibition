@@ -39,10 +39,10 @@ public class WorkController {
             HttpServletRequest request) throws IOException {
 
         String token = jwtProvider.getToken(request);
-        Long userId = jwtProvider.getAuthentication(token).getId();
+        Long visitorId = jwtProvider.getAuthentication(token).getId();
 
         ImageFile image = imageFileStore.storeImageFile(imageFile);
-        CreateWork.Response work = workService.createWork(userId, title, description, image);
+        CreateWork.Response work = workService.createWork(visitorId, title, description, image);
 
         return ResponseEntity.ok(work);
     }

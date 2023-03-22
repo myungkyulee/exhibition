@@ -26,7 +26,7 @@ public class SignIn {
     @AllArgsConstructor
     @Builder
     public static class Response {
-        private String username;
+        private String name;
         private String jwt;
     }
 }

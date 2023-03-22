@@ -1,11 +1,11 @@
 package exhibition.exhibition.dto;
 
-import exhibition.exhibition.domain.User;
+import exhibition.exhibition.domain.Visitor;
 import lombok.*;
 
 import javax.validation.constraints.*;
 
-public class CreateUser {
+public class CreateVisitor {
     @Getter
     @Setter
     @AllArgsConstructor
@@ -29,10 +29,10 @@ public class CreateUser {
         private String name;
         private String email;
 
-        public static CreateUser.Response fromEntity(User user) {
+        public static CreateVisitor.Response fromEntity(Visitor visitor) {
             return Response.builder()
-                    .name(user.getName())
-                    .email(user.getEmail())
+                    .name(visitor.getName())
+                    .email(visitor.getEmail())
                     .build();
         }
     }

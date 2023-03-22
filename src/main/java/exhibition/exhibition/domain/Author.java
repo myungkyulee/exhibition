@@ -25,7 +25,7 @@ public class Author {
     private String email;
 
     @OneToOne
-    private User user;
+    private Visitor visitor;
 
     @CreatedDate
     private LocalDateTime createdAt;
