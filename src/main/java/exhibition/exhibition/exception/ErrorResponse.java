@@ -11,11 +11,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ErrorResponse {
-    private ErrorCode errorCode;
+    private int status;
     private String message;
+    private String code;
+    private ErrorCode errorCode;
 
     public ErrorResponse(ErrorCode errorCode) {
-        this.errorCode = errorCode;
+        this.status = errorCode.getStatus();
         this.message = errorCode.getMessage();
+        this.code = errorCode.getCode();
+        this.errorCode = errorCode;
     }
 }

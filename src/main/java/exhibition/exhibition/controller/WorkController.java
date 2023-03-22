@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -26,19 +25,18 @@ public class WorkController {
     private final ImageFileStore imageFileStore;
     private final JwtProvider jwtProvider;
 
-    @GetMapping("/works/create")
+    @GetMapping("/works")
     public String createWorkForm() {
         return "index";
     }
 
-    @PostMapping("/works/create")
+    @PostMapping("/works")
     public ResponseEntity<CreateWork.Response> createWork(
             @RequestParam String title,
             @RequestParam String description,
             @RequestParam("image") MultipartFile imageFile,
-            HttpServletRequest request) throws IOException {
+            @RequestHeader("Authorization") String token) throws IOException {
 
-        String token = jwtProvider.getToken(request);
         Long visitorId = jwtProvider.getAuthentication(token).getId();
 
         ImageFile image = imageFileStore.storeImageFile(imageFile);
