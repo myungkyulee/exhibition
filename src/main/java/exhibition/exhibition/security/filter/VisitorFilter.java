@@ -1,4 +1,4 @@
-package exhibition.exhibition.config.filter;
+package exhibition.exhibition.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import exhibition.exhibition.dto.Authentication;
@@ -7,7 +7,6 @@ import exhibition.exhibition.exception.ErrorResponse;
 import exhibition.exhibition.exception.ExhibitionException;
 import exhibition.exhibition.provider.JwtProvider;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -17,10 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Slf4j
-@WebFilter(urlPatterns = {"/authors/*", "/works"})
+@WebFilter(urlPatterns = {"/visitors/*", "/auth/createAuthor/*", "/"})
 @RequiredArgsConstructor
-public class AuthorFilter implements Filter {
+public class VisitorFilter implements Filter {
 
     private static final String TOKEN_HEADER = "Authorization";
     private final JwtProvider jwtProvider;
@@ -30,13 +28,13 @@ public class AuthorFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
-        res.setContentType("application/json");
+        response.setContentType("application/json");
         String jwt = req.getHeader(TOKEN_HEADER);
 
         try {
             Authentication auth = jwtProvider.getAuthentication(jwt);
             boolean authorized = auth.getRoles().stream()
-                    .anyMatch(a -> a.equals("AUTHOR"));
+                    .anyMatch(a -> a.equals("VISITOR"));
             if (!authorized) {
                 throw new ExhibitionException(ErrorCode.ACCESS_DENIED);
             }
