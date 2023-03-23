@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -25,6 +26,7 @@ public class AuthController {
 
     @PostMapping("/signUp")
     public ResponseEntity<CreateVisitor.Response> signUp(
+
             @RequestBody @Valid CreateVisitor.Request request) {
         return ResponseEntity.ok(visitorService.join(request));
     }
@@ -32,6 +34,7 @@ public class AuthController {
     @PostMapping("/signIn")
     public ResponseEntity<SignIn.Response> signIn(
             @RequestBody @Valid SignIn.Request request) {
+
         return ResponseEntity.ok(visitorService.signIn(request));
     }
 
@@ -41,9 +44,6 @@ public class AuthController {
             @RequestHeader("Authorization") String token) {
 
         Long visitorId = jwtProvider.getAuthentication(token).getId();
-
-        CreateAuthor.Response result =
-                authorService.createAuthor(visitorId, authorForm.getAuthorName());
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(authorService.createAuthor(visitorId, authorForm.getAuthorName()));
     }
 }

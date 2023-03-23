@@ -1,30 +1,27 @@
 package exhibition.exhibition.dto;
 
-import exhibition.exhibition.domain.Author;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 public class CreateAuthor {
-
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    public static class Response {
-        private String authorName;
-
-
-        public static Response fromEntity(Author author) {
-            return new Response(author.getName());
-        }
-    }
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
         @NotBlank
         private String authorName;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @Builder
+    public static class Response {
+        private String authorName;
+        private List<String> roles;
+        private String jwt;
     }
 }

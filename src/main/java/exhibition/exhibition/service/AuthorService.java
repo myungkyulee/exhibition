@@ -3,6 +3,7 @@ package exhibition.exhibition.service;
 import exhibition.exhibition.domain.Author;
 import exhibition.exhibition.domain.Visitor;
 import exhibition.exhibition.dto.CreateAuthor;
+import exhibition.exhibition.provider.JwtProvider;
 import exhibition.exhibition.repository.AuthorRepository;
 import exhibition.exhibition.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthorService {
     private final AuthorRepository authorRepository;
     private final VisitorRepository visitorRepository;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public CreateAuthor.Response createAuthor(Long visitorId, String authorName) {
@@ -35,6 +37,13 @@ public class AuthorService {
                 .visitor(visitor)
                 .build();
 
-        return CreateAuthor.Response.fromEntity(author);
+        visitor.setAuthor(author);
+        authorRepository.save(author);
+        String token = jwtProvider.generateToken(visitorId, visitor.getRoles());
+
+        return CreateAuthor.Response.builder()
+                .authorName(author.getName())
+                .jwt(token)
+                .roles(author.getVisitor().getRoles()).build();
     }
 }
