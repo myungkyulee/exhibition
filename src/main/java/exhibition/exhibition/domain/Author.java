@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,10 +22,17 @@ public class Author {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @OneToOne
     private Visitor visitor;
+
+    @OneToMany(mappedBy = "author")
+    private List<Work> workList;
+
+    @OneToMany(mappedBy = "author")
+    private List<Series> seriesList;
 
     @CreatedDate
     private LocalDateTime createdAt;

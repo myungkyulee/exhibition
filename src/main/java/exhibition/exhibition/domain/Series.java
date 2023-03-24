@@ -1,12 +1,16 @@
 package exhibition.exhibition.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,26 +18,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Work {
+public class Series {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
-    private String description;
-
-    @Embedded
-    @Column(nullable = false)
-    private ImageFile image;
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name ="author_id")
     private Author author;
 
-    @ManyToOne
-    @JoinColumn(name = "series_id")
-    private Series series;
+    @OneToMany(mappedBy = "series")
+    private List<Work> works;
 
     @CreatedDate
     private LocalDateTime createdAt;
