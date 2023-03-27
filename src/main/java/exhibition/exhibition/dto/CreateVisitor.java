@@ -14,6 +14,8 @@ public class CreateVisitor {
     public static class Request{
         @NotBlank
         private String name;
+        @NotBlank
+        private String visitorName;
         @Email
         private String email;
         @Size(max = 15, min = 8)

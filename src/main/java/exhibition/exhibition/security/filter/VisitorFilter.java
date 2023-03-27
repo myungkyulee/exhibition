@@ -5,10 +5,8 @@ import exhibition.exhibition.dto.Authentication;
 import exhibition.exhibition.exception.ErrorCode;
 import exhibition.exhibition.exception.ErrorResponse;
 import exhibition.exhibition.exception.ExhibitionException;
-import exhibition.exhibition.provider.JwtProvider;
+import exhibition.exhibition.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

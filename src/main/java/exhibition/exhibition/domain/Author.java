@@ -23,7 +23,7 @@ public class Author {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String authorName;
 
     @OneToOne
     private Visitor visitor;

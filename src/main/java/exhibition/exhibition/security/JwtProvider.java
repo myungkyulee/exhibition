@@ -1,4 +1,4 @@
-package exhibition.exhibition.provider;
+package exhibition.exhibition.security;
 
 import exhibition.exhibition.dto.Authentication;
 import exhibition.exhibition.exception.ErrorCode;

@@ -1,0 +1,14 @@
+package exhibition.exhibition.controller;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/series")
+public class SeriesController {
+
+   /* @PostMapping
+    public void String
+    */
+}

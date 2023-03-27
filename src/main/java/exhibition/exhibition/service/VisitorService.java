@@ -6,7 +6,7 @@ import exhibition.exhibition.security.PasswordEncoder;
 import exhibition.exhibition.domain.Visitor;
 import exhibition.exhibition.dto.SignIn;
 import exhibition.exhibition.dto.CreateVisitor;
-import exhibition.exhibition.provider.JwtProvider;
+import exhibition.exhibition.security.JwtProvider;
 import exhibition.exhibition.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +30,7 @@ public class VisitorService {
         Visitor visitor = Visitor.builder()
                 .email(request.getEmail())
                 .name(request.getName())
+                .visitorName(request.getVisitorName())
                 .roles(List.of("VISITOR"))
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();

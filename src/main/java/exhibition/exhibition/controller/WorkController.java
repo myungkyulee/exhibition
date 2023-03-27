@@ -2,7 +2,7 @@ package exhibition.exhibition.controller;
 
 import exhibition.exhibition.domain.ImageFile;
 import exhibition.exhibition.dto.CreateWork;
-import exhibition.exhibition.provider.JwtProvider;
+import exhibition.exhibition.security.JwtProvider;
 import exhibition.exhibition.repository.ImageFileStore;
 import exhibition.exhibition.service.WorkService;
 import lombok.RequiredArgsConstructor;

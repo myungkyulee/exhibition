@@ -3,7 +3,7 @@ package exhibition.exhibition.controller;
 import exhibition.exhibition.dto.CreateAuthor;
 import exhibition.exhibition.dto.SignIn;
 import exhibition.exhibition.dto.CreateVisitor;
-import exhibition.exhibition.provider.JwtProvider;
+import exhibition.exhibition.security.JwtProvider;
 import exhibition.exhibition.service.AuthorService;
 import exhibition.exhibition.service.VisitorService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController

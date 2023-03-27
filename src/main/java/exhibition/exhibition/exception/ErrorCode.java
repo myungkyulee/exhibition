@@ -13,8 +13,10 @@ public enum ErrorCode {
 
     // visitor 에러코드
     NOT_FOUND_VISITOR(400, "V001", "visitor를 찾을 수 없습니다."),
-    PASSWORD_UN_MATCH(400, "V002", "비밀번호가 일치하지 않습니다.");
+    PASSWORD_UN_MATCH(400, "V002", "비밀번호가 일치하지 않습니다."),
 
+    // author 에러코드
+    NOT_FOUND_AUTHOR(400, "A001", "author를 찾을 수 없습니다.");
 
     private final int status;
     private final String code;

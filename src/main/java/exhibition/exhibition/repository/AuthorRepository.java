@@ -9,5 +9,7 @@ import java.util.Optional;
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     Optional<Author> findByVisitorId(Long userId);
-    boolean existsByName(String authorName);
+    boolean existsByAuthorName(String authorName);
+
+    Optional<Author> findByAuthorName(String authorName);
 }

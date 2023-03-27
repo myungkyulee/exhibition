@@ -23,7 +23,12 @@ public class Series {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(nullable = false)
+    private String title;
+
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private Work coverWork;
 
     @ManyToOne
     @JoinColumn(name ="author_id")

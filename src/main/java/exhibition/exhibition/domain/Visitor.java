@@ -24,6 +24,8 @@ public class Visitor {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
+    private String visitorName;
+    @Column(nullable = false)
     private String email;
     @Column(nullable = false)
     private String password;
