@@ -26,19 +26,20 @@ public class AuthorService {
     private final VisitorRepository visitorRepository;
     private final JwtProvider jwtProvider;
     private final SeriesRepository seriesRepository;
+    private final FollowService followService;
 
     @Transactional
     public CreateAuthor.Response createAuthor(Long visitorId, String authorName) {
         if (authorRepository.findByVisitorId(visitorId).isPresent()) {
-            throw new RuntimeException("이미 author가 존재합니다.");
+            throw new ExhibitionException(ErrorCode.ALREADY_EXIST_AUTHOR);
         }
 
         if (authorRepository.existsByAuthorName(authorName)) {
-            throw new RuntimeException("중복되는 작가명입니다.");
+            throw new ExhibitionException(ErrorCode.DUPLICATED_AUTHOR_NAME);
         }
 
         Visitor visitor = visitorRepository.findById(visitorId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_VISITOR));
 
         visitor.getRoles().add("AUTHOR");
 
@@ -70,9 +71,12 @@ public class AuthorService {
                         .build())
                 .collect(Collectors.toList());
 
+        int followNumber = followService.countFollow(author.getId());
+
         return GetAuthorInfo.Response.builder()
                 .authorName(author.getAuthorName())
                 .seriesCovers(seriesCovers)
+                .followNumber(followNumber)
                 .build();
     }
 }

@@ -25,8 +25,8 @@ public class AuthController {
 
     @PostMapping("/signUp")
     public ResponseEntity<CreateVisitor.Response> signUp(
-
             @RequestBody @Valid CreateVisitor.Request request) {
+
         return ResponseEntity.ok(visitorService.join(request));
     }
 

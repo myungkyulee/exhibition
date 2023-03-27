@@ -14,9 +14,12 @@ public enum ErrorCode {
     // visitor 에러코드
     NOT_FOUND_VISITOR(400, "V001", "visitor를 찾을 수 없습니다."),
     PASSWORD_UN_MATCH(400, "V002", "비밀번호가 일치하지 않습니다."),
+    DUPLICATED_EMAIL(400, "V003", "이미 가입된 이메일입니다."),
 
     // author 에러코드
     NOT_FOUND_AUTHOR(400, "A001", "author를 찾을 수 없습니다."),
+    DUPLICATED_AUTHOR_NAME(400, "A002", "중복되는 작가명입니다."),
+    ALREADY_EXIST_AUTHOR(400, "A003", "이미 author가 존재합니다."),
 
     // work 에러코드
     NOT_FOUND_WORK(400, "W001", "work을 찾을 수가 없습니다."),

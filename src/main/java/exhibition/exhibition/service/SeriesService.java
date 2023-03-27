@@ -22,8 +22,8 @@ public class SeriesService {
     private final SeriesRepository seriesRepository;
 
     @Transactional
-    public CreateSeries.Response createSeries(CreateSeries.Request request, Long visitorId) {
-        Author author = authorRepository.findByVisitorId(visitorId)
+    public CreateSeries.Response createSeries(CreateSeries.Request request, Long visitorIdForAuthor) {
+        Author author = authorRepository.findByVisitorId(visitorIdForAuthor)
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_AUTHOR));
         Work coverWork = workRepository.findById(request.getCoverWorkId())
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_WORK));
@@ -36,11 +36,10 @@ public class SeriesService {
                 .build());
 
         request.getWorkIdList().stream()
-                .map(id -> workRepository.findById(id)
+                .map(id -> workRepository.findByIdAndAuthorId(id, author.getId())
                         .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_WORK)))
                 .forEach(work -> work.setSeries(series));
 
         return CreateSeries.Response.fromEntity(series);
     }
-
 }

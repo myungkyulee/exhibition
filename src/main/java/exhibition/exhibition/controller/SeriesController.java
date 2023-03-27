@@ -21,9 +21,9 @@ public class SeriesController {
     public ResponseEntity<CreateSeries.Response> createSeries(
             @RequestBody @Valid CreateSeries.Request request,
             @RequestHeader("Authorization") String token) {
-        Long visitorId = jwtProvider.getAuthentication(token).getId();
+        Long visitorIdForAuthor = jwtProvider.getAuthentication(token).getId();
 
-        CreateSeries.Response series = seriesService.createSeries(request, visitorId);
+        CreateSeries.Response series = seriesService.createSeries(request, visitorIdForAuthor);
         return ResponseEntity.ok(series);
     }
 }

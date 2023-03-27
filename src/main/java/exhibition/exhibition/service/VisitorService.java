@@ -24,7 +24,7 @@ public class VisitorService {
     @Transactional
     public CreateVisitor.Response join(CreateVisitor.Request request) {
         if (visitorRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("중복된 이메일 입니다.");
+            throw new ExhibitionException(ErrorCode.DUPLICATED_EMAIL);
         }
 
         Visitor visitor = Visitor.builder()
