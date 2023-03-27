@@ -4,6 +4,9 @@ import exhibition.exhibition.domain.Author;
 import exhibition.exhibition.domain.ImageFile;
 import exhibition.exhibition.domain.Work;
 import exhibition.exhibition.dto.CreateWork;
+import exhibition.exhibition.dto.GetWorkInfo;
+import exhibition.exhibition.exception.ErrorCode;
+import exhibition.exhibition.exception.ExhibitionException;
 import exhibition.exhibition.repository.AuthorRepository;
 import exhibition.exhibition.repository.WorkRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,13 @@ public class WorkService {
                 .image(image)
                 .build();
 
-        return CreateWork.Response.from(workRepository.save(work));
+        return CreateWork.Response.fromEntity(workRepository.save(work));
+    }
+
+    public GetWorkInfo.Response getWorkInfo(Long workId) {
+        Work work = workRepository.findById(workId)
+                .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_WORK));
+
+        return GetWorkInfo.Response.fromEntity(work);
     }
 }

@@ -2,6 +2,7 @@ package exhibition.exhibition.controller;
 
 import exhibition.exhibition.domain.ImageFile;
 import exhibition.exhibition.dto.CreateWork;
+import exhibition.exhibition.dto.GetWorkInfo;
 import exhibition.exhibition.security.JwtProvider;
 import exhibition.exhibition.repository.ImageFileStore;
 import exhibition.exhibition.service.WorkService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -25,16 +27,17 @@ public class WorkController {
     private final ImageFileStore imageFileStore;
     private final JwtProvider jwtProvider;
 
-    @GetMapping("/works")
-    public String createWorkForm() {
-        return "index";
+    @GetMapping("/works/{workId}")
+    public ResponseEntity<GetWorkInfo.Response> getWorkInfo(@PathVariable Long workId) {
+        GetWorkInfo.Response workInfo = workService.getWorkInfo(workId);
+        return ResponseEntity.ok(workInfo);
     }
 
     @PostMapping("/works")
     public ResponseEntity<CreateWork.Response> createWork(
-            @RequestParam String title,
-            @RequestParam String description,
-            @RequestParam("image") MultipartFile imageFile,
+            @RequestParam @NotBlank String title,
+            @RequestParam @NotBlank String description,
+            @RequestParam("image") @NotBlank MultipartFile imageFile,
             @RequestHeader("Authorization") String token) throws IOException {
 
         Long visitorId = jwtProvider.getAuthentication(token).getId();

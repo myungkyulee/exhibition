@@ -31,12 +31,14 @@ public class CreateWork {
     @NoArgsConstructor
     @Builder
     public static class Response {
+        private Long workId;
         private String title;
         private String description;
         private ImageFile image;
 
-        public static CreateWork.Response from(Work work) {
+        public static CreateWork.Response fromEntity(Work work) {
             return Response.builder()
+                    .workId(work.getId())
                     .title(work.getTitle())
                     .description(work.getDescription())
                     .image(work.getImage()).build();

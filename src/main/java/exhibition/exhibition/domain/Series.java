@@ -10,7 +10,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -25,17 +24,19 @@ public class Series {
 
     @Column(nullable = false)
     private String title;
+    private String description;
 
     @OneToOne
     @JoinColumn(nullable = false)
     private Work coverWork;
 
     @ManyToOne
-    @JoinColumn(name ="author_id")
+    @JoinColumn(name ="author_id", nullable = false)
     private Author author;
-
+/*
     @OneToMany(mappedBy = "series")
     private List<Work> works;
+*/
 
     @CreatedDate
     private LocalDateTime createdAt;

@@ -10,4 +10,5 @@ import lombok.*;
 public class SeriesCover {
     private String imageURL;
     private String title;
+
 }

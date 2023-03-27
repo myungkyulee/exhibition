@@ -16,10 +16,15 @@ public enum ErrorCode {
     PASSWORD_UN_MATCH(400, "V002", "비밀번호가 일치하지 않습니다."),
 
     // author 에러코드
-    NOT_FOUND_AUTHOR(400, "A001", "author를 찾을 수 없습니다.");
+    NOT_FOUND_AUTHOR(400, "A001", "author를 찾을 수 없습니다."),
+
+    // work 에러코드
+    NOT_FOUND_WORK(400, "W001", "work을 찾을 수가 없습니다."),
+
+    // series 에러코드
+    NOT_FOUND_SERIES(400, "S001", "series를 찾을 수가 없습니다.");
 
     private final int status;
     private final String code;
     private final String message;
-
 }

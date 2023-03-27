@@ -8,6 +8,7 @@ import exhibition.exhibition.dto.GetAuthorInfo;
 import exhibition.exhibition.dto.SeriesCover;
 import exhibition.exhibition.exception.ErrorCode;
 import exhibition.exhibition.exception.ExhibitionException;
+import exhibition.exhibition.repository.SeriesRepository;
 import exhibition.exhibition.security.JwtProvider;
 import exhibition.exhibition.repository.AuthorRepository;
 import exhibition.exhibition.repository.VisitorRepository;
@@ -24,6 +25,7 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final VisitorRepository visitorRepository;
     private final JwtProvider jwtProvider;
+    private final SeriesRepository seriesRepository;
 
     @Transactional
     public CreateAuthor.Response createAuthor(Long visitorId, String authorName) {
@@ -59,18 +61,18 @@ public class AuthorService {
         Author author = authorRepository.findByAuthorName(authorName)
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_AUTHOR));
 
-        List<Series> seriesList = author.getSeriesList();
+        List<Series> seriesList = seriesRepository.findAllByAuthorId(author.getId());
 
-        List<SeriesCover> seriesCoverList = seriesList.stream()
+        List<SeriesCover> seriesCovers = seriesList.stream()
                 .map(s -> SeriesCover.builder()
                         .title(s.getTitle())
-                        .imageURL(s.getCoverWork().getImage().getImageFileUrl())
+                        .imageURL("/images/" + s.getCoverWork().getImage().getImageFileName())
                         .build())
                 .collect(Collectors.toList());
 
         return GetAuthorInfo.Response.builder()
                 .authorName(author.getAuthorName())
-                .coverImageList(seriesCoverList)
+                .seriesCovers(seriesCovers)
                 .build();
     }
 }
