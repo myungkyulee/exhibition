@@ -9,6 +9,7 @@ public class CreateAuthor {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @Builder
     public static class Request {
         @NotBlank
         private String authorName;

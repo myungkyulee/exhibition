@@ -44,7 +44,7 @@ public class ImageFileStore {
 
         imageFile.transferTo(new File(getFullPath(storeName)));
 
-        return new ImageFile(storeName, imageOriName, imageDir);
+        return new ImageFile(storeName, imageOriName, imageDir.substring(2) + storeName);
     }
 
     private String createStoreImageName(String originalImageName) {

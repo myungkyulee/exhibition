@@ -13,11 +13,11 @@ import exhibition.exhibition.security.JwtProvider;
 import exhibition.exhibition.repository.AuthorRepository;
 import exhibition.exhibition.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,22 +58,18 @@ public class AuthorService {
                 .roles(author.getVisitor().getRoles()).build();
     }
 
-    public GetAuthorInfo.Response getAuthorInfo(String authorName) {
+
+    public GetAuthorInfo getAuthorInfo(String authorName, final Pageable pageable) {
         Author author = authorRepository.findByAuthorName(authorName)
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_AUTHOR));
 
-        List<Series> seriesList = seriesRepository.findAllByAuthorId(author.getId());
+        Page<Series> seriesList = seriesRepository.findAllByAuthor(author, pageable);
 
-        List<SeriesCover> seriesCovers = seriesList.stream()
-                .map(s -> SeriesCover.builder()
-                        .title(s.getTitle())
-                        .imageURL("/images/" + s.getCoverWork().getImage().getImageFileName())
-                        .build())
-                .collect(Collectors.toList());
+        Page<SeriesCover> seriesCovers = seriesList.map(SeriesCover::from);
 
-        int followNumber = followService.countFollow(author.getId());
+        int followNumber = followService.countFollows(author.getId());
 
-        return GetAuthorInfo.Response.builder()
+        return GetAuthorInfo.builder()
                 .authorName(author.getAuthorName())
                 .seriesCovers(seriesCovers)
                 .followNumber(followNumber)

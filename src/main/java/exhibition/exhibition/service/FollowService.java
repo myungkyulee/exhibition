@@ -42,13 +42,14 @@ public class FollowService {
 
     @Transactional
     public void unfollow(Long visitorId, String authorName) {
-        Visitor visitor = visitorRepository.findById(visitorId)
-                .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_VISITOR));
+        if (visitorRepository.existsById(visitorId)) {
+            throw new ExhibitionException(ErrorCode.NOT_FOUND_VISITOR);
+        }
 
-        Author author = authorRepository.findByAuthorName(authorName)
+        Long authorId = authorRepository.findIdByAuthorName(authorName)
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_AUTHOR));
 
-        Follow follow = followRepository.findByVisitorAndAuthor(visitor, author)
+        Follow follow = followRepository.findByVisitorIdAndAuthorId(visitorId, authorId)
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_FOLLOW));
 
         followRepository.delete(follow);
@@ -59,7 +60,7 @@ public class FollowService {
         Author author = authorRepository.findByAuthorName(authorName)
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_AUTHOR));
 
-        Page<Follow> follows = followRepository.findAllByAuthor(author, pageable);
+        Page<Follow> follows = followRepository.findAllByAuthorId(author.getId(), pageable);
 
         return follows.map(f -> FollowerInfo.from(f.getVisitor()));
     }
@@ -72,7 +73,7 @@ public class FollowService {
         Visitor visitor = visitorRepository.findByVisitorName(visitorName)
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_VISITOR));
 
-        Page<Follow> follows = followRepository.findAllByVisitor(visitor, pageable);
+        Page<Follow> follows = followRepository.findAllByVisitorId(visitor.getId(), pageable);
 
         return follows.map(f -> FollowingInfo.from(f.getAuthor()));
     }

@@ -13,6 +13,7 @@ public class SignIn {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @Builder
     public static class Request {
         @Email
         private String email;

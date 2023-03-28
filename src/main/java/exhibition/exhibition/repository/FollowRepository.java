@@ -15,10 +15,9 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     int countById(Long authorId);
 
-    Optional<Follow> findByVisitorAndAuthor(Visitor visitor, Author author);
+    Optional<Follow> findByVisitorIdAndAuthorId(Long visitor, Long author);
 
-    Page<Follow> findAllByAuthor(Author author, Pageable pageable);
+    Page<Follow> findAllByVisitorId(Long id, Pageable pageable);
 
-    Page<Follow> findAllByVisitor(Visitor visitor, Pageable pageable);
-
+    Page<Follow> findAllByAuthorId(Long id, Pageable pageable);
 }
