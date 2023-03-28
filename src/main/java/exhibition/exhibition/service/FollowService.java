@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class FollowService {
@@ -42,14 +44,18 @@ public class FollowService {
 
     @Transactional
     public void unfollow(Long visitorId, String authorName) {
-        if (visitorRepository.existsById(visitorId)) {
+        if (!visitorRepository.existsById(visitorId)) {
             throw new ExhibitionException(ErrorCode.NOT_FOUND_VISITOR);
         }
 
-        Long authorId = authorRepository.findIdByAuthorName(authorName)
+        Author author = authorRepository.findByAuthorName(authorName)
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_AUTHOR));
 
-        Follow follow = followRepository.findByVisitorIdAndAuthorId(visitorId, authorId)
+        if (Objects.equals(author.getVisitor().getId(), visitorId)) {
+            throw new ExhibitionException(ErrorCode.FOLLOW_SAME_FOLLOWING);
+        }
+
+        Follow follow = followRepository.findByVisitorIdAndAuthorId(visitorId, author.getId())
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_FOLLOW));
 
         followRepository.delete(follow);
@@ -63,10 +69,6 @@ public class FollowService {
         Page<Follow> follows = followRepository.findAllByAuthorId(author.getId(), pageable);
 
         return follows.map(f -> FollowerInfo.from(f.getVisitor()));
-    }
-
-    public int countFollows(Long authorId){
-        return followRepository.countById(authorId);
     }
 
     public Page<FollowingInfo> getFollowings(String visitorName, Pageable pageable) {

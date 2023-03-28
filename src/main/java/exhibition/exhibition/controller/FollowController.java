@@ -1,6 +1,5 @@
 package exhibition.exhibition.controller;
 
-import exhibition.exhibition.domain.Visitor;
 import exhibition.exhibition.dto.FollowerInfo;
 import exhibition.exhibition.dto.FollowingInfo;
 import exhibition.exhibition.security.JwtProvider;

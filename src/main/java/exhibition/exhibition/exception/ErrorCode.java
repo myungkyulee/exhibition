@@ -28,7 +28,8 @@ public enum ErrorCode {
     NOT_FOUND_SERIES(400, "S001", "series를 찾을 수가 없습니다."),
 
     // follow 에러코드
-    NOT_FOUND_FOLLOW(400, "F001" , "follow를 찾을 수가 없습니다.");
+    NOT_FOUND_FOLLOW(400, "F001" , "follow를 찾을 수가 없습니다."),
+    FOLLOW_SAME_FOLLOWING(400, "F002", "팔로워와 팔로잉이 같은사람입니다.");
 
     private final int status;
     private final String code;
