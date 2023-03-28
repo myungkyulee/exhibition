@@ -4,6 +4,7 @@ import exhibition.exhibition.dto.GetAuthorInfo;
 import exhibition.exhibition.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,5 +23,12 @@ public class AuthorController {
             final Pageable pageable) {
         GetAuthorInfo authorInfo = authorService.getAuthorInfo(authorName, pageable);
         return ResponseEntity.ok(authorInfo);
+    }
+
+    @GetMapping("/autocomplete")
+    public ResponseEntity<?> getAuthorNamesAutocomplete(
+            @RequestParam String keyword) {
+        Page<String> autoCompleatedName = authorService.getAuthorNamesByKeyword(keyword);
+        return ResponseEntity.ok(autoCompleatedName);
     }
 }

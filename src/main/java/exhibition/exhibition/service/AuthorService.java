@@ -8,12 +8,14 @@ import exhibition.exhibition.dto.GetAuthorInfo;
 import exhibition.exhibition.dto.SeriesCover;
 import exhibition.exhibition.exception.ErrorCode;
 import exhibition.exhibition.exception.ExhibitionException;
+import exhibition.exhibition.repository.FollowRepository;
 import exhibition.exhibition.repository.SeriesRepository;
 import exhibition.exhibition.security.JwtProvider;
 import exhibition.exhibition.repository.AuthorRepository;
 import exhibition.exhibition.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +28,7 @@ public class AuthorService {
     private final VisitorRepository visitorRepository;
     private final JwtProvider jwtProvider;
     private final SeriesRepository seriesRepository;
-    private final FollowService followService;
+    private final FollowRepository followRepository;
 
     @Transactional
     public CreateAuthor.Response createAuthor(Long visitorId, String authorName) {
@@ -67,12 +69,22 @@ public class AuthorService {
 
         Page<SeriesCover> seriesCovers = seriesList.map(SeriesCover::from);
 
-        int followNumber = followService.countFollows(author.getId());
+        int followNumber = followRepository.countByAuthorId(author.getId());
 
         return GetAuthorInfo.builder()
                 .authorName(author.getAuthorName())
                 .seriesCovers(seriesCovers)
                 .followNumber(followNumber)
                 .build();
+    }
+
+    public Page<String> getAuthorNamesByKeyword(String keyword) {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Author> authors = authorRepository
+                .findAllByAuthorNameStartingWithIgnoreCase(keyword, pageable);
+
+        return authors.map(Author::getAuthorName);
+
     }
 }
