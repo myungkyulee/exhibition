@@ -22,8 +22,8 @@ public class VisitorService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public CreateVisitor.Response join(CreateVisitor.Request request) {
-        if (visitorRepository.findByEmail(request.getEmail()).isPresent()) {
+    public CreateVisitor.Response signUp(CreateVisitor.Request request) {
+        if (visitorRepository.existsByEmail(request.getEmail())) {
             throw new ExhibitionException(ErrorCode.DUPLICATED_EMAIL);
         }
 

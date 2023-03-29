@@ -12,4 +12,5 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
 
     Optional<Visitor> findByVisitorName(String visitorName);
 
+    boolean existsByEmail(String email);
 }
