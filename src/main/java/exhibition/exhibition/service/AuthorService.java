@@ -3,6 +3,7 @@ package exhibition.exhibition.service;
 import exhibition.exhibition.domain.Author;
 import exhibition.exhibition.domain.Series;
 import exhibition.exhibition.domain.Visitor;
+import exhibition.exhibition.dto.AuthenticationTokens;
 import exhibition.exhibition.dto.CreateAuthor;
 import exhibition.exhibition.dto.GetAuthorInfo;
 import exhibition.exhibition.dto.SeriesCover;
@@ -14,11 +15,14 @@ import exhibition.exhibition.security.JwtProvider;
 import exhibition.exhibition.repository.AuthorRepository;
 import exhibition.exhibition.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static exhibition.exhibition.domain.CacheKey.AUTHOR_INFO;
 
 
 @Service
@@ -52,15 +56,15 @@ public class AuthorService {
 
         visitor.setAuthor(author);
         authorRepository.save(author);
-        String token = jwtProvider.generateToken(visitorId, visitor.getRoles());
+        AuthenticationTokens authenticationTokens = jwtProvider.generateTokens(visitorId, visitor.getRoles());
 
         return CreateAuthor.Response.builder()
                 .authorName(author.getAuthorName())
-                .jwt(token)
+                .tokens(authenticationTokens)
                 .roles(author.getVisitor().getRoles()).build();
     }
 
-
+    @Cacheable(key = "#companyName", value = AUTHOR_INFO)
     public GetAuthorInfo getAuthorInfo(String authorName, final Pageable pageable) {
         Author author = authorRepository.findByAuthorName(authorName)
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_AUTHOR));
