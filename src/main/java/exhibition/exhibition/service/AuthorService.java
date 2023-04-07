@@ -22,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static exhibition.exhibition.domain.CacheKey.AUTHOR_INFO;
 
 
 @Service
@@ -64,7 +63,6 @@ public class AuthorService {
                 .roles(author.getVisitor().getRoles()).build();
     }
 
-    @Cacheable(key = "#companyName", value = AUTHOR_INFO)
     public GetAuthorInfo getAuthorInfo(String authorName, final Pageable pageable) {
         Author author = authorRepository.findByAuthorName(authorName)
                 .orElseThrow(() -> new ExhibitionException(ErrorCode.NOT_FOUND_AUTHOR));

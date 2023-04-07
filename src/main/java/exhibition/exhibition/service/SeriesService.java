@@ -10,8 +10,13 @@ import exhibition.exhibition.repository.AuthorRepository;
 import exhibition.exhibition.repository.SeriesRepository;
 import exhibition.exhibition.repository.WorkRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static exhibition.exhibition.domain.CacheKey.SERIES;
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +46,12 @@ public class SeriesService {
                 .forEach(work -> work.setSeries(series));
 
         return CreateSeries.Response.fromEntity(series);
+    }
+
+    @Cacheable(key = "#seriesNum", value = SERIES)
+    public List<Work> getSeries(Long seriesNum) {
+        List<Work> works = workRepository.findBySeriesId(seriesNum);
+
+        return works;
     }
 }

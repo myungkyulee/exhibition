@@ -28,6 +28,6 @@ public class SignIn {
     @Builder
     public static class Response {
         private String name;
-        private String jwt;
+        private AuthenticationTokens tokens;
     }
 }

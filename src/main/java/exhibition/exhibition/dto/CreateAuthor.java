@@ -23,6 +23,6 @@ public class CreateAuthor {
     public static class Response {
         private String authorName;
         private List<String> roles;
-        private String jwt;
+        private AuthenticationTokens tokens;
     }
 }

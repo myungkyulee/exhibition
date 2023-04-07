@@ -18,16 +18,14 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping("/{authorName}")
-    public ResponseEntity<GetAuthorInfo> getAuthorInfo(
-            @PathVariable String authorName,
-            final Pageable pageable) {
+    public ResponseEntity<GetAuthorInfo> getAuthorInfo(@PathVariable String authorName,
+                                                       final Pageable pageable) {
         GetAuthorInfo authorInfo = authorService.getAuthorInfo(authorName, pageable);
         return ResponseEntity.ok(authorInfo);
     }
 
     @GetMapping("/autocomplete")
-    public ResponseEntity<?> getAuthorNamesAutocomplete(
-            @RequestParam String keyword) {
+    public ResponseEntity<?> getAuthorNamesAutocomplete(@RequestParam String keyword) {
         Page<String> autoCompleatedName = authorService.getAuthorNamesByKeyword(keyword);
         return ResponseEntity.ok(autoCompleatedName);
     }

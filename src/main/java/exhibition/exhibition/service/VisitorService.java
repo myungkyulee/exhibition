@@ -1,5 +1,6 @@
 package exhibition.exhibition.service;
 
+import exhibition.exhibition.dto.AuthenticationTokens;
 import exhibition.exhibition.exception.ErrorCode;
 import exhibition.exhibition.exception.ExhibitionException;
 import exhibition.exhibition.security.PasswordEncoder;
@@ -46,11 +47,11 @@ public class VisitorService {
             throw new ExhibitionException(ErrorCode.PASSWORD_UN_MATCH);
         }
 
-        String jwt = jwtProvider.generateToken(visitor.getId(), visitor.getRoles());
+        AuthenticationTokens authenticationTokens = jwtProvider.generateTokens(visitor.getId(), visitor.getRoles());
 
         return SignIn.Response.builder()
                 .name(visitor.getName())
-                .jwt(jwt)
+                .tokens(authenticationTokens)
                 .build();
     }
 }

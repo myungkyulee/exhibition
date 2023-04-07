@@ -1,9 +1,11 @@
 package exhibition.exhibition.controller;
 
+import exhibition.exhibition.dto.AuthenticationTokens;
 import exhibition.exhibition.dto.CreateAuthor;
 import exhibition.exhibition.dto.SignIn;
 import exhibition.exhibition.dto.CreateVisitor;
 import exhibition.exhibition.security.JwtProvider;
+import exhibition.exhibition.security.JwtService;
 import exhibition.exhibition.service.AuthorService;
 import exhibition.exhibition.service.VisitorService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class AuthController {
 
     private final AuthorService authorService;
     private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
     private final VisitorService visitorService;
 
     @PostMapping("/signUp")
@@ -45,4 +48,13 @@ public class AuthController {
         Long visitorId = jwtProvider.getAuthentication(token).getId();
         return ResponseEntity.ok(authorService.createAuthor(visitorId, authorForm.getAuthorName()));
     }
+
+    @PostMapping("/tokens/regenerate")
+    public ResponseEntity<?> generateAccessTokenFromRefreshToken(
+            @RequestHeader("Authorization") String refreshToken) {
+        AuthenticationTokens authenticationTokens =
+                jwtService.generateAccessTokenFromRefreshToken(refreshToken);
+        return ResponseEntity.ok(authenticationTokens);
+    }
+
 }

@@ -1,13 +1,13 @@
 package exhibition.exhibition.service;
 
 import exhibition.exhibition.domain.Visitor;
+import exhibition.exhibition.dto.AuthenticationTokens;
 import exhibition.exhibition.dto.SignIn;
 import exhibition.exhibition.dto.VisitorInfoFromKakao;
 import exhibition.exhibition.exception.ErrorCode;
 import exhibition.exhibition.exception.ExhibitionException;
 import exhibition.exhibition.repository.VisitorRepository;
 import exhibition.exhibition.security.JwtProvider;
-import exhibition.exhibition.security.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
@@ -30,11 +30,11 @@ public class OauthService {
         Visitor visitor = visitorRepository.findByEmail(visitorInfo.getEmail())
                 .orElse(kakaoSignUp(visitorInfo));
 
-        String jwt = jwtProvider.generateToken(visitor.getId(), visitor.getRoles());
+        AuthenticationTokens authenticationTokens = jwtProvider.generateTokens(visitor.getId(), visitor.getRoles());
 
         return SignIn.Response.builder()
                 .name(visitor.getName())
-                .jwt(jwt)
+                .tokens(authenticationTokens)
                 .build();
     }
 
